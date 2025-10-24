@@ -38,6 +38,16 @@
                 text-align: center;
                 font-weight: bold;
             }
+            .error-message{
+                background-color: #f8d7da;
+                color: #721c24;
+                padding: 20px;
+                margin-bottom: 20px;
+                border: 1px solid #f5c6cb;
+                border-radius: 5px;
+                text-align: center;
+                font-weight: bold;
+            }
             table{
                 width: 100%;
                 border-collapse: collapse;
@@ -79,15 +89,58 @@
         <div class="container">
             <h1>Data Registrasi User</h1>
             
-            <?php if (isset($_POST['submit'])): ?>
-                <div class="success-message">
-                    Registrasi Berhasil!
+            <?php if (isset($_POST['submit'])): 
+                $nama_depan    = htmlspecialchars($_POST['nama_depan'] ?? '');
+                $nama_belakang = htmlspecialchars($_POST['nama_belakang'] ?? '');
+                $asal_kota     = htmlspecialchars($_POST['asal_kota'] ?? '');
+                $umur_raw      = $_POST['umur'] ?? '';
+
+                $umur_valid = filter_var($umur_raw, FILTER_VALIDATE_INT);
+                if ($umur_valid === false || $umur_valid < 10):
+            ?>
+                <div class="error-message">
+                    X Error!<br>
+                    Umur harus minimal 10 tahun!
                 </div>
-                
                 <div class="back-button">
                     <a href="index.html">Kembali ke Form Registrasi</a>
                 </div>
-            <?php else: ?>
+            <?php
+            else:
+                    $umur = $umur_valid;
+                    $nama_lengkap = strtoupper(trim($nama_depan . ' ' . $nama_belakang));
+                    $kota_upper   = strtoupper($asal_kota);
+            ?>
+                <div class="success-message">
+                    Registrasi Berhasil!
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 10%;">No</th>
+                            <th style="width: 45%;">Nama Lengkap</th>
+                            <th style="width: 15%;">Umur</th>
+                            <th style="width: 30%;">Asal Kota</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                            for ($i = 2; $i <= $umur; $i += 2) {
+                                if ($i === 4 || $i === 8) continue;
+                                echo '<tr>';
+                                echo '<td>' . $i . '</td>';
+                                echo '<td>' . $nama_lengkap . '</td>';
+                                echo '<td>' . $umur . ' tahun</td>';
+                                echo '<td>' . $kota_upper . '</td>';
+                                echo '</tr>';
+                            }
+                        ?>
+                    </tbody>
+                </table>
+                <div class="back-button">
+                    <a href="index.html">Kembali ke Form Registrasi</a>
+                </div>
+                <?php endif; else: ?>
                 <div style="text-align: center; color: #dc3545; padding: 20px;">
                     <h3>Error: Data tidak ditemukan</h3>
                     <p>Silakan isi form registrasi terlebih dahulu.</p>
