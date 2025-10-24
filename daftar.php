@@ -99,7 +99,7 @@
                 if ($umur_valid === false || $umur_valid < 10):
             ?>
                 <div class="error-message">
-                    X Error!<br>
+                    <span style="font-size:24px;">✖ Error!</span><br>
                     Umur harus minimal 10 tahun!
                 </div>
                 <div class="back-button">
